@@ -12,6 +12,7 @@ from config import settings
 from api.routes import router as api_router
 from core.startup import startup_handler
 from utils.paths import ensure_directories
+from utils.ngrok_manager import ngrok_manager
 
 # ==============================
 # Initialize FastAPI Application
@@ -58,28 +59,28 @@ if __name__ == "__main__":
     # Configuration
     PORT = settings.PORT
     
-    # Optional: ngrok tunnel for cloud environments
+    # Start ngrok tunnel if enabled
     if settings.USE_NGROK:
-        try:
-            from pyngrok import ngrok
-            import nest_asyncio
-            
-            nest_asyncio.apply()
-            
-            print("🚀 Starting ngrok tunnel...")
-            public_url = ngrok.connect(PORT)
-            print(f"✅ Public URL: {public_url}")
-            print(f"🌐 Ngrok Dashboard: http://127.0.0.1:4040")
-            print(f"📱 Share this link: {public_url}")
-            print("-" * 60)
-        except ImportError:
-            print("⚠️ pyngrok not installed. Running without tunnel.")
+        public_url = ngrok_manager.start_tunnel(
+            port=PORT,
+            auth_token=settings.NGROK_AUTH_TOKEN
+        )
     
-    # Start FastAPI server
-    print(f"🔥 Starting FastAPI server on port {PORT}...")
-    uvicorn.run(
-        app,
-        host=settings.HOST,
-        port=PORT,
-        log_level="info"
-    )
+    try:
+        # Start FastAPI server
+        print(f"🔥 Starting FastAPI server on {settings.HOST}:{PORT}...")
+        print(f"📍 Local URL: http://localhost:{PORT}")
+        print("-" * 60 + "\n")
+        
+        uvicorn.run(
+            app,
+            host=settings.HOST,
+            port=PORT,
+            log_level="info"
+        )
+    except KeyboardInterrupt:
+        print("\n\n🛑 Server stopped by user")
+    finally:
+        # Clean up ngrok tunnel
+        if settings.USE_NGROK:
+            ngrok_manager.stop_tunnel()

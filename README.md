@@ -81,8 +81,46 @@ COLOR_WEIGHT = 0.3
 # Server settings
 HOST = "0.0.0.0"
 PORT = 8000
-USE_NGROK = False  # Set to True for ngrok tunnel
+
+# Ngrok settings
+USE_NGROK = False           # Set to True to enable ngrok
+NGROK_AUTH_TOKEN = None     # Optional: for custom domains
 ```
+
+## 🌐 Using Ngrok for Public Access
+
+### Option 1: Basic Ngrok (Free)
+
+1. Set `USE_NGROK = True` in `config.py`
+2. Run the app: `python main.py`
+3. Share the public URL that appears in the console
+
+### Option 2: With Auth Token (Recommended)
+
+1. Sign up at [ngrok.com](https://ngrok.com) (free)
+2. Get your auth token from the dashboard
+3. Add to `config.py`:
+   ```python
+   USE_NGROK = True
+   NGROK_AUTH_TOKEN = "your-token-here"
+   ```
+4. Run the app: `python main.py`
+
+### Benefits of Auth Token:
+- ✅ Longer session times
+- ✅ Custom domains (paid plans)
+- ✅ More concurrent tunnels
+- ✅ Better rate limits
+
+### Environment Variable (Recommended for Security)
+
+Create a `.env` file:
+```
+USE_NGROK=true
+NGROK_AUTH_TOKEN=your-token-here
+```
+
+The app will automatically load these settings!
 
 ## 📦 Components
 
@@ -119,7 +157,10 @@ Set `USE_NGROK = True` in `config.py` to create a public URL:
 
 ```python
 USE_NGROK = True
+NGROK_AUTH_TOKEN = "your-token"  # Optional but recommended
 ```
+
+See the **Using Ngrok for Public Access** section above for details.
 
 ### Custom Dataset
 

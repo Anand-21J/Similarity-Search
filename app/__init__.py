@@ -21,3 +21,14 @@ They can be empty or contain package-level imports.
 
 # utils/__init__.py
 """Utility functions for Fashion AI Search"""
+from app.utils.ngrok_manager import ngrok_manager
+from app.utils.image_utils import get_avg_color, color_similarity, image_to_base64
+from app.utils.paths import ensure_directories
+
+__all__ = [
+    'ngrok_manager',
+    'get_avg_color',
+    'color_similarity', 
+    'image_to_base64',
+    'ensure_directories'
+]
