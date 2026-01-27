@@ -5,6 +5,8 @@ Centralized configuration management for the application
 
 from pathlib import Path
 from pydantic_settings import BaseSettings
+from typing import Optional
+
 
 class Settings(BaseSettings):
     """Application configuration settings"""
@@ -23,7 +25,7 @@ class Settings(BaseSettings):
     
     # Search parameters
     TOP_N: int = 30  # Initial candidates to fetch
-    SIMILARITY_THRESHOLD: float = 0.25  # Minimum CLIP score
+    SIMILARITY_THRESHOLD: float = 0.65  # Minimum CLIP score
     
     # Score weights
     CLIP_WEIGHT: float = 0.7
@@ -57,7 +59,13 @@ class Settings(BaseSettings):
     
     HOST: str = "0.0.0.0"
     PORT: int = 8000
-    USE_NGROK: bool = False  # Set to True for ngrok tunnel
+    
+    # Enable / disable ngrok
+    USE_NGROK: bool = False
+    
+    # OPTIONAL ngrok auth token
+    # If None, ngrok will try to run without authentication
+    NGROK_AUTH_TOKEN: Optional[str] = None
     
     # ==============================
     # Device Configuration
@@ -69,6 +77,7 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
+
 
 # ==============================
 # Global Settings Instance
