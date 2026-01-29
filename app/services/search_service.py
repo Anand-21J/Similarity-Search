@@ -63,15 +63,24 @@ class SearchService:
             query_color,
             query_category
         )
-        
-        # Format results for frontend
+
+        # Format results
         formatted_results = self._format_results(ranked_results[:top_k])
-        
+
+        # 🔥 FINAL GUARANTEE CHECK
+        if not formatted_results:
+            return {
+                "success": False,
+                "message": "NO SIMILAR IMAGES FOUND",
+                "query_category": query_category,
+                "results": []
+            }
+
         return {
             "success": True,
             "query_category": query_category,
             "results": formatted_results
-        }
+}
     
     def _generate_query_embedding(self, query_image: Image.Image) -> np.ndarray:
         """
@@ -222,3 +231,4 @@ class SearchService:
             })
         
         return formatted_results
+

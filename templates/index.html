@@ -617,14 +617,21 @@
         </div>
 
         <!-- Results -->
-        <div class="results-section" id="resultsSection">
-            <div style="text-align: center;">
-                <span class="success-badge">✨ Similar items found</span>
-            </div>
-            <h2 class="section-title">Matching <span class="highlight">Products</span></h2>
-            <div class="results-grid" id="resultsGrid"></div>
-        </div>
+    <div class="results-section" id="resultsSection">
+    <div style="text-align: center;">
+        <span class="success-badge">✨ Similar items found</span>
     </div>
+
+    <h2 class="section-title">Matching <span class="highlight">Products</span></h2>
+
+    <div id="noResultsMessage"
+         style="display:none; text-align:center; font-size:1.4rem; font-weight:600; color:#555; margin-top:40px;">
+        ❌ No Similar Images Found
+    </div>
+
+    <div class="results-grid" id="resultsGrid"></div>
+</div>
+
 
     <script>
         const uploadZone = document.getElementById('uploadZone');
@@ -718,46 +725,59 @@
         }
 
         function displayResults(data) {
-            resultsGrid.innerHTML = '';
-            
-            data.results.forEach((result, index) => {
-                const card = document.createElement('div');
-                card.className = 'result-card';
-                card.style.animationDelay = `${index * 0.1}s`;
+        const noResultsMessage = document.getElementById('noResultsMessage');
 
-                const detailsHtml = Object.entries(result.details)
-                    .map(([key, value]) => `
-                        <div class="detail-item">
-                            <span class="detail-key">${key}</span>
-                            <span class="detail-value">${value}</span>
-                        </div>
-                    `).join('');
+        resultsGrid.innerHTML = '';
+        noResultsMessage.style.display = 'none';
 
-                card.innerHTML = `
-                    <div class="result-image-container">
-                        <img src="${result.image}" alt="${result.name}" class="result-image">
-                        <div class="result-rank">${result.rank}</div>
-                    </div>
-                    <div class="result-info">
-                        <div class="result-name">${result.name}</div>
-                        <div class="score-badge">${result.percentage}% Match</div>
-                        ${detailsHtml ? `
-                            <button class="details-toggle" onclick="toggleDetails(this)">
-                                View Details
-                            </button>
-                            <div class="details-content">
-                                ${detailsHtml}
-                            </div>
-                        ` : ''}
-                    </div>
-                `;
-
-                resultsGrid.appendChild(card);
-            });
-
+        // 🔴 NO RESULTS CASE
+        if (!data.results || data.results.length === 0) {
             resultsSection.style.display = 'block';
+            noResultsMessage.style.display = 'block';
             resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            return;
         }
+
+        // ✅ RESULTS FOUND
+        data.results.forEach((result, index) => {
+            const card = document.createElement('div');
+            card.className = 'result-card';
+            card.style.animationDelay = `${index * 0.1}s`;
+
+            const detailsHtml = Object.entries(result.details || {})
+                .map(([key, value]) => `
+                    <div class="detail-item">
+                        <span class="detail-key">${key}</span>
+                        <span class="detail-value">${value}</span>
+                    </div>
+                `).join('');
+
+            card.innerHTML = `
+                <div class="result-image-container">
+                    <img src="${result.image}" alt="${result.name}" class="result-image">
+                    <div class="result-rank">${result.rank}</div>
+                </div>
+                <div class="result-info">
+                    <div class="result-name">${result.name}</div>
+                    <div class="score-badge">${result.percentage}% Match</div>
+                    ${detailsHtml ? `
+                        <button class="details-toggle" onclick="toggleDetails(this)">
+                            View Details
+                        </button>
+                        <div class="details-content">
+                            ${detailsHtml}
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+
+            resultsGrid.appendChild(card);
+        });
+
+        resultsSection.style.display = 'block';
+        resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
 
         function toggleDetails(button) {
             const details = button.nextElementSibling;
