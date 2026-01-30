@@ -49,20 +49,6 @@ fashion-ai-search/
 
 # Fashion AI Search - Technical Documentation
 
-## Table of Contents
-1. [Overview](#overview)
-2. [Architecture](#architecture)
-3. [Dependencies](#dependencies)
-4. [Configuration](#configuration)
-5. [System Components](#system-components)
-6. [API Endpoints](#api-endpoints)
-7. [Search Algorithm](#search-algorithm)
-8. [Installation & Setup](#installation--setup)
-9. [Usage](#usage)
-10. [Technical Details](#technical-details)
-
----
-
 ## Dependencies
 
 ### Core Libraries
